@@ -1,7 +1,7 @@
 library(shiny)
 library(dplyr)
-library(shinythemes)
-source("MRC_all.R")
+
+source("MRC_all_shiny.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -14,7 +14,7 @@ ui <- fluidPage(
     sidebarPanel(
       sliderInput(inputId = "predictors",
                   label   = "Number of Predictors: ",
-                  min     = 2,
+                  min     = 1,
                   max     = 3,
                   value   = 1,
                   step    = 1),
@@ -136,7 +136,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic to print output returned by MRC_all()
 server <- function(input, output) {
   
   power_vals <- reactive({
@@ -146,7 +146,17 @@ server <- function(input, output) {
   })
   
   output$power_results <- eventReactive(input$run_function, {
-    if (input$predictors == 2){
+     
+    
+    
+     # 1 predictor
+     if (input$predictors == 1){
+      paste0(power_vals()$n_print, "\n",
+             power_vals()$power_r2_print, "\n",
+             power_vals()$power_b1_print, "\n", 
+             power_vals()$power_none_print, "\n", 
+             power_vals()$power_one_print, "\n")
+    } else if (input$predictors == 2){
       paste0(power_vals()$n_print, "\n",
              power_vals()$power_r2_print, "\n",
              power_vals()$power_b1_print, "\n",

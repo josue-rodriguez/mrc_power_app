@@ -24,7 +24,7 @@
 #'
 
 MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, r23 = NULL, n = 100, alpha = .05, nruns = 10000,
-                    my = 0, m1 = 0, m2 = 0, m3 = 0, sy = 1, s1 = 1, s2 = 1, s3 = 1, predictors = 2){
+                    my = 0, m1 = 0, m2 = 0, m3 = 0, sy = 1, s1 = 1, s2 = 1, s3 = 1, predictors = 2, ...){
   
   
   
@@ -34,6 +34,93 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
   var_1 <- s1^2
   var_2 <- s2^2
   if (predictors == 3) var_3 <- s3^2
+  
+  ###### -------------------------- BEGIN 1 PREDICTOR
+  
+  # begin power analysis for a simple regression
+  if (predictors == 1){
+    
+    # check all necessary values
+    if (is.null(ry1)){
+      stop("Make sure there are no missing correlation values for a 1 predictor regression")
+    }
+    
+    # simulate population from Multivariate Normal Distribution using specified covariance matrix
+    sim_pop <- MASS::mvrnorm(n = 100000,
+                             mu = c(my, m1),
+                             Sigma = matrix(c(var_y, ry1,
+                                              ry1, var_1), ncol = 2),
+                             empirical = TRUE)
+    
+    sim_pop <- data.frame(sim_pop)
+    colnames(sim_pop) <- c("y", "x1")
+  
+    # initialize vectors for slopes, R-squared, F statistic, and degrees of freedom
+    b1 <- c()
+    r2 <- c()
+    f_stat <- c()
+    df1 <- c()
+    df2 <- c()
+    
+    # simulate data
+    for (i in 1:nruns){
+      # grab a random sample from sim_pop
+      split <- sample(nrow(sim_pop), size = n)
+      samp <- sim_pop[split, ]
+      
+      # run test regressions
+      test <- lm(y ~ x1, data = samp)
+      summ <- summary(test)
+      
+      # grab p-values from regressions for slopes
+      b1[i] <- summ$coefficients[2, 4]
+      
+      # grab R-squareds, F-statistics, and degreees of freedom from regressions
+      r2[i] <- summ$r.squared
+      f_stat[i] <- summ$fstatistic[1]
+      df1[i] <- summ$fstatistic[2]
+      df2[i] <- summ$fstatistic[3]
+    }
+    
+    # count totals for number of times we can reject the null for the parameters
+    reject_b1 <- ifelse(b1 < alpha, 1, 0)
+    
+    # count totals for being able to reject the null for
+    not_reject <- ifelse(reject_b1 == 0, 1, 0)
+    reject <- ifelse(reject_b1 == 1, 1, 0)
+    
+    # count total for being able to reject R-squared
+    probability_r2 <- 1 - pf(f_stat, df1, df2)
+    reject_r2 <- ifelse(probability_r2 < alpha, 1, 0)
+    
+    # calculate power for slopes, r2, and rejecting null for one, two or neither of the parameters
+    power_b1 <- mean(reject_b1)
+    power_not_reject <- mean(not_reject)
+    power_reject <- mean(reject)
+    power_r2 <- mean(reject_r2)
+    
+    # create and store result messages
+    n_print        <- paste0("Sample size is = ", n)
+    power_r2_print <- paste0("Power R2 = ", power_r2)
+    power_b1_print <- paste0("Power b1 = ", power_b1)
+    power_none_print <- paste0("Proportion failing to reject the null = ", power_not_reject)
+    power_one_print  <- paste0("Proportion rejecting the null ", power_reject)
+    
+    vals <- list(n_print = n_print, 
+                 power_r2_print = power_r2_print,
+                 power_b1_print = power_b1_print, 
+                 power_none_print = power_none_print, 
+                 power_one_print = power_one_print
+                 )
+    return(vals)
+    }
+    
+    
+    
+    
+    
+  ###### -------------------------- END 1 PREDICTOR
+  
   
   # begin power analysis for 2 predictor multiple regression
   if (predictors == 2){
