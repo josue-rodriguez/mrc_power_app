@@ -9,3 +9,4 @@ A shiny app to calculate power for simple and multiple regression
   + Separate options into columns
   + Modify output appearance
   + Add tabs/options conditional upon the number of predictors
+  + Fix routine for OLS regression
