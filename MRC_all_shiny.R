@@ -46,7 +46,7 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     }
     
     # simulate population from Multivariate Normal Distribution using specified covariance matrix
-    sim_pop <- MASS::mvrnorm(n = 100000,
+    sim_pop <- MASS::mvrnorm(n = 10000,
                              mu = c(my, m1),
                              Sigma = matrix(c(var_y, ry1,
                                               ry1, var_1), ncol = 2),
@@ -56,11 +56,11 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     colnames(sim_pop) <- c("y", "x1")
   
     # initialize vectors for slopes, R-squared, F statistic, and degrees of freedom
-    b1 <- c()
-    r2 <- c()
-    f_stat <- c()
-    df1 <- c()
-    df2 <- c()
+    b1 <- rep(NA, nruns)
+    r2 <- rep(NA, nruns)
+    f_stat <- rep(NA, nruns)
+    df1 <- rep(NA, nruns)
+    df2 <- rep(NA, nruns)
     
     # simulate data
     for (i in 1:nruns){
@@ -131,7 +131,7 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     }
     
     # simulate population from Multivariate Normal Distribution using specified covariance matrix
-    sim_pop <- MASS::mvrnorm(n = 100000,
+    sim_pop <- MASS::mvrnorm(n = 10000,
                              mu = c(my, m1, m2),
                              Sigma = matrix(c(var_y, ry1, ry2,
                                               ry1, var_1, r12,
@@ -141,12 +141,12 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     colnames(sim_pop) <- c("y", "x1", "x2")
     
     # initialize vectors for slopes, R-squared, F statistic, and degrees of freedom
-    b1 <- c()
-    b2 <- c()
-    r2 <- c()
-    f_stat <- c()
-    df1 <- c()
-    df2 <- c()
+    b1 <- rep(NA, nruns)
+    b2 <- rep(NA, nruns)
+    r2 <- rep(NA, nruns)
+    f_stat <- rep(NA, nruns)
+    df1 <- rep(NA, nruns)
+    df2 <- rep(NA, nruns)
     
     # simulate data
     for (i in 1:nruns){
@@ -216,7 +216,7 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     }
     
     # simulate population from Multivariate Normal Distribution using specified covariance matrix
-    sim_pop <- MASS::mvrnorm(n = 100000,
+    sim_pop <- MASS::mvrnorm(n = 10000,
                              mu = c(my, m1, m2, m3),
                              Sigma = matrix(c(var_y, ry1, ry2, ry3,
                                               ry1, var_1, r12, r13,
@@ -227,13 +227,13 @@ MRC_all <- function(ry1 = NULL, ry2 = NULL, ry3 = NULL, r12 = NULL, r13 = NULL, 
     colnames(sim_pop) <- c("y", "x1", "x2", "x3")
     
     # initialize vectors for slopes, R-squared, F statistic, and degrees of freedom
-    b1 <- c()
-    b2 <- c()
-    b3 <- c()
-    r2 <- c()
-    f_stat <- c()
-    df1 <- c()
-    df2 <- c()
+    b1 <- rep(NA, nruns)
+    b2 <- rep(NA, nruns)
+    b3 <- rep(NA, nruns)
+    r2 <- rep(NA, nruns)
+    f_stat <- rep(NA, nruns)
+    df1 <- rep(NA, nruns)
+    df2 <- rep(NA, nruns)
     
     # simulate data
     for (i in 1:nruns){

@@ -28,7 +28,7 @@ ui <- fluidPage(
                   label   = "Alpha: ",
                   min     = .001,
                   max     = 1,
-                  value   = 0.5),
+                  value   = 0.05),
       numericInput(inputId = "nruns",
                    label   = "Number of Iterations",
                    min     = 1,
